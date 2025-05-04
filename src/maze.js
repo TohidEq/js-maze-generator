@@ -122,23 +122,18 @@ class Maze {
     const allUnvisitedCellsCount =
       ((this.width - 1) / 2) * ((this.height - 1) / 2);
 
-    const visitedCells = [[startX, startY]];
+    let visitedCellsCount = 1;
 
     let [x, y] = [startX, startY];
 
-    // Helper function to check if a cell is visited
-    const isVisited = (cell) => {
-      return visitedCells.some(([vx, vy]) => vx === cell[0] && vy === cell[1]);
-    };
-
-    while (visitedCells.length != allUnvisitedCellsCount) {
+    while (visitedCellsCount != allUnvisitedCellsCount) {
       const neighbors = this.getNeighbors(x, y, true);
       const randomNeighborsIndex = Math.floor(Math.random() * neighbors.length);
       const [nx, ny] = neighbors[randomNeighborsIndex];
 
-      if (!isVisited([nx, ny])) {
+      if (this.grid[ny][nx]) {
         this.carvePath(x, y, nx, ny);
-        visitedCells.push([nx, ny]);
+        visitedCellsCount++;
       }
 
       // Move to the next cell
