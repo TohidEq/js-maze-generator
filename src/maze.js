@@ -59,8 +59,8 @@ class Maze {
     return x >= 0 && x < this.width && y >= 0 && y < this.height;
   }
 
-  // Get neighbors that can be carved (2 cells away and still walls)
-  getNeighbors(x, y) {
+  // Get neighbors that can be carved (2 cells away and still walls by default [can be changed to "CanBeWall"])
+  getNeighbors(x, y, canBeWall = false) {
     const neighbors = [];
     const directions = [
       [0, -2], // up
@@ -72,7 +72,7 @@ class Maze {
     for (const [dx, dy] of directions) {
       const nx = x + dx;
       const ny = y + dy;
-      if (this.inBounds(nx, ny) && this.grid[ny][nx]) {
+      if (this.inBounds(nx, ny) && (canBeWall || this.grid[ny][nx])) {
         neighbors.push([nx, ny]);
       }
     }
@@ -88,13 +88,13 @@ class Maze {
     this.grid[y2][x2] = false; // path
   }
 
-  // Generate the maze using DFS with backtracking
-  async generate(startX = this.xStart, startY = this.yStart) {
+  // Generate the maze using DFS with backtracking (Good enough to play with it and chill)
+  generateDFS(startX = this.xStart, startY = this.yStart) {
     // Start with all walls, carve starting cell
     this.grid[startY][startX] = false;
 
     const stack = [[startX, startY]];
-    // let counter = 1;
+
     while (stack.length > 0) {
       const [x, y] = stack[stack.length - 1];
       const neighbors = this.getNeighbors(x, y);
@@ -111,6 +111,39 @@ class Maze {
 
         stack.push([nx, ny]);
       }
+    }
+  }
+
+  // Generate the maze using Aldous-Broder(Hard Maze! but Worst way to generate maze)
+  generateAldousBroder(startX = this.xStart, startY = this.yStart) {
+    // Start with all walls, carve starting cell
+    this.grid[startY][startX] = false;
+
+    const allUnvisitedCellsCount =
+      ((this.width - 1) / 2) * ((this.height - 1) / 2);
+
+    const visitedCells = [[startX, startY]];
+
+    let [x, y] = [startX, startY];
+
+    // Helper function to check if a cell is visited
+    const isVisited = (cell) => {
+      return visitedCells.some(([vx, vy]) => vx === cell[0] && vy === cell[1]);
+    };
+
+    while (visitedCells.length != allUnvisitedCellsCount) {
+      const neighbors = this.getNeighbors(x, y, true);
+      const randomNeighborsIndex = Math.floor(Math.random() * neighbors.length);
+      const [nx, ny] = neighbors[randomNeighborsIndex];
+
+      if (!isVisited([nx, ny])) {
+        this.carvePath(x, y, nx, ny);
+        visitedCells.push([nx, ny]);
+      }
+
+      // Move to the next cell
+      x = nx;
+      y = ny;
     }
   }
 
