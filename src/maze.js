@@ -205,10 +205,6 @@ class Maze {
     }
   }
 
-  test() {
-    this.grid[11][11] = false;
-  }
-
   // Render the maze as a string for console output
   toString() {
     return this.grid

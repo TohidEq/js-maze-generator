@@ -5,7 +5,6 @@ function main() {
   // maze.generateAldousBroder();
   // maze.generateDFS();
   maze.generatePrime();
-  // maze.test();
 
   console.log("Generated Maze:");
   console.log(maze.toString());
