@@ -21,6 +21,10 @@ class Maze {
     return grid;
   }
 
+  getGrid() {
+    return this.grid;
+  }
+
   randOdd(min, max) {
     return min + (~~(Math.random() * (((max - min) >> 1) + 1)) << 1);
     /*

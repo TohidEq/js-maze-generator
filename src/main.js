@@ -1,7 +1,7 @@
 import Maze from "./maze.js";
 
 function main() {
-  const maze = new Maze(41, 41);
+  const maze = new Maze(5, 5);
   // maze.generateAldousBroder();
   // maze.generateDFS();
   maze.generatePrime();
